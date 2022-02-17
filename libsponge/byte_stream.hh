@@ -1,6 +1,7 @@
 #ifndef SPONGE_LIBSPONGE_BYTE_STREAM_HH
 #define SPONGE_LIBSPONGE_BYTE_STREAM_HH
 
+#include <cstddef>
 #include <string>
 
 //! \brief An in-order byte stream.
@@ -11,7 +12,11 @@
 class ByteStream {
   private:
     // Your code here -- add private members as necessary.
-
+    std::string buffer_;
+    size_t capacity_;
+    bool is_input_ended_;
+    size_t total_bytes_written_;
+    size_t total_bytes_read_;
     // Hint: This doesn't need to be a sophisticated data structure at
     // all, but if any of your tests are taking longer than a second,
     // that's a sign that you probably want to keep exploring
