@@ -1,3 +1,4 @@
+#include "address.hh"
 #include "socket.hh"
 #include "util.hh"
 
@@ -9,6 +10,15 @@ using namespace std;
 void get_URL(const string &host, const string &path) {
     // Your code here.
 
+    TCPSocket sock;
+    sock.connect(Address(host, "http"));
+    // https://stackoverflow.com/questions/5757290/http-header-line-break-style
+    sock.write("GET " + path + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
+    while (!sock.eof()) {
+        cout << sock.read();
+    }
+    sock.shutdown(SHUT_RDWR);
+    sock.close();
     // You will need to connect to the "http" service on
     // the computer whose name is in the "host" string,
     // then request the URL path given in the "path" string.
@@ -17,8 +27,8 @@ void get_URL(const string &host, const string &path) {
     // (not just one call to read() -- everything) until you reach
     // the "eof" (end of file).
 
-    cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
-    cerr << "Warning: get_URL() has not been implemented yet.\n";
+    // cerr << "Function called: get_URL(" << host << ", " << path << ").\n";
+    // cerr << "Warning: get_URL() has not been implemented yet.\n";
 }
 
 int main(int argc, char *argv[]) {
