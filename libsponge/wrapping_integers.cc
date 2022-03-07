@@ -1,5 +1,8 @@
 #include "wrapping_integers.hh"
 
+#include <cstdint>
+#include <sys/types.h>
+
 // Dummy implementation of a 32-bit wrapping integer
 
 // For Lab 2, please replace with a real implementation that passes the
@@ -15,7 +18,8 @@ using namespace std;
 //! \param isn The initial sequence number
 WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
     DUMMY_CODE(n, isn);
-    return WrappingInt32{0};
+    uint32_t wrap = isn.raw_value() + static_cast<int32_t>(n);
+    return WrappingInt32{wrap};
 }
 
 //! Transform a WrappingInt32 into an "absolute" 64-bit sequence number (zero-indexed)
@@ -30,5 +34,7 @@ WrappingInt32 wrap(uint64_t n, WrappingInt32 isn) {
 //! has a different ISN.
 uint64_t unwrap(WrappingInt32 n, WrappingInt32 isn, uint64_t checkpoint) {
     DUMMY_CODE(n, isn, checkpoint);
-    return {};
+    int32_t steps = n - wrap(checkpoint, isn);
+    int64_t res = checkpoint + steps;
+    return res >= 0 ? res : res + (1ul << 32);
 }
