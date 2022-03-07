@@ -36,7 +36,14 @@ string ByteStream::peek_output(const size_t len) const {
 //! \param[in] len bytes will be removed from the output side of the buffer
 void ByteStream::pop_output(const size_t len) {
     // DUMMY_CODE(len);
-    size_t bytes_read = buffer_size() > len ? len : buffer_size();
+    // size_t bytes_read = buffer_size() > len ? len : buffer_size();
+    size_t bytes_read = 0;
+    if (buffer_size() >= len) {
+        bytes_read = len;
+    } else {
+        set_error();
+        return;
+    }
     total_bytes_read_ += bytes_read;
     buffer_.erase(0, bytes_read);
 }
@@ -46,7 +53,14 @@ void ByteStream::pop_output(const size_t len) {
 //! \returns a string
 std::string ByteStream::read(const size_t len) {
     // DUMMY_CODE(len);
-    size_t bytes_read = buffer_size() > len ? len : buffer_size();
+    // size_t bytes_read = buffer_size() > len ? len : buffer_size();
+    size_t bytes_read = 0;
+    if (buffer_size() >= len) {
+        bytes_read = len;
+    } else {
+        set_error();
+        return "";
+    }
     string ret = peek_output(bytes_read);
     pop_output(bytes_read);
     return ret;
