@@ -6,6 +6,8 @@
 #include "tcp_segment.hh"
 #include "wrapping_integers.hh"
 
+#include <cstddef>
+#include <cstdint>
 #include <functional>
 #include <queue>
 
@@ -31,6 +33,28 @@ class TCPSender {
 
     //! the (absolute) sequence number for the next byte to be sent
     uint64_t _next_seqno{0};
+    // the latest ackno
+    uint64_t recv_ackno_{0};
+
+    // flag: if syn had sent
+    bool syn_{false};
+    // flag: if fin had sent
+    bool fin_{false};
+
+    // the number of consecutive retransmissions
+    unsigned int count_consecutive_retransmissions_{0};
+    // SYN and FIN each count for one byte
+    uint64_t count_bytes_in_flight_{0};
+    uint16_t receiver_windows_size_{1};
+
+    std::queue<TCPSegment> segments_outstanding_{};
+
+    // timer
+    unsigned int rto_;
+    unsigned int time_elapsed_{0};
+    bool timer_running_{false};
+
+    void send_segment(TCPSegment &seg);
 
   public:
     //! Initialize a TCPSender
